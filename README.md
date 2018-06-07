@@ -2,7 +2,7 @@
 
 Module for working with remote credentials
 
-Authored by Module for working with remote credentials
+Authored by Daniel Gruber de Alencar
 
 
 Details of how to create a Module in this way can be found here
