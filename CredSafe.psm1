@@ -4,7 +4,7 @@ Write-Verbose $PSScriptRoot
 
 Write-Verbose 'Import everything in sub folders folder'
 
-foreach($folder in @('internal', 'functions'))
+foreach($folder in @('internal', 'functions','classes'))
 
 {
 
