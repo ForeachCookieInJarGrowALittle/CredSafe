@@ -1,4 +1,4 @@
-$script:ModuleName = 'PSVault'
+﻿$script:ModuleName = 'PSVault'
 # Removes all versions of the module from the session before importing
 Get-Module $ModuleName | Remove-Module
 $ModuleBase        = Split-Path -Parent $MyInvocation.MyCommand.Path
@@ -9,9 +9,6 @@ while ((Split-Path $ModuleBase -Leaf) -ne $ModuleName) {
 
 #Variables
 $SecureString      = ConvertTo-SecureString -AsPlainText -Force -String "Don't tell anyone"
-$Credential1       = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "SomeRandomUserID",         (ConvertTo-SecureString "securepass" -AsPlainText -Force)
-$Credential2       = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList ".\ServiceAccount", (ConvertTo-SecureString "securepass" -AsPlainText -Force)
-$Credential3       = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "Contoso\SomeRandomUserID",   (ConvertTo-SecureString "securepass" -AsPlainText -Force)
 
 ## this variable is for the VSTS tasks and is to be used for referencing any mock artifacts
 $Env:ModuleBase    = $ModuleBase
@@ -22,8 +19,8 @@ $Env:ModuleBase    = $ModuleBase
 Import-Module $ModuleBase\$ModuleName.psd1 -PassThru -ErrorAction Stop | Out-Null
 
 
-Describe "Function" -Tags Build , Unit{
-#remove artifacts from previous runs
+Describe "Remove-PSVault" -Tags Build , Unit{
+  #remove artifacts from previous runs
   Get-ChildItem $env:LOCALAPPDATA\PSVault -filter pester* -Recurse|Remove-Item
   Get-ChildItem $env:LOCALAPPDATA\psvault -Recurse -Include * -Exclude Keys -Directory|Remove-Item -force -Recurse
   
@@ -41,17 +38,21 @@ Describe "Function" -Tags Build , Unit{
   }
   
     
-  context 'Command' {
-    it 'does' {
-      $vault              = New-PSVault -path "$($temporaryFolder.Fullname)\Pester" -VaultPassword $SecureString
+  context '
+    $vault = New-PSVault -path "$($temporaryFolder.Fullname)\Pester" -VaultPassword $SecureString -SaveKey
+    Remove-PSVault -Vault $vault -Force
+  ' {
+    it 'removes the vault' {
+      $vault              = New-PSVault -path "$($temporaryFolder.Fullname)\Pester" -VaultPassword $SecureString -SaveKey
       $script:location    = $vault.location
       $script:KeyLocation = $vault.GetSavedKeyLocation()
       {
-        Save-PSVaultKey -Vault $vault
+        Remove-PSVault -Vault $vault -force
       } | should not throw
     }
-    it 'and' {
-      Test-Path $location|should be true
+    it 'entirely.' {
+      Test-Path $location | should be $false
+      Test-Path $keylocation | should be $false
     }
   }
   & $aftereachContext

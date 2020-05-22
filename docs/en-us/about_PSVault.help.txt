@@ -1,0 +1,121 @@
+TOPIC
+    PSVault
+
+SHORT DESCRIPTION
+    
+    You should considering providing an introduction and overview of your
+    module here.
+
+LONG DESCRIPTION
+    
+    Did you ever put one of your passwords used to impersonate another user
+    or to authenticate against some random service in plaintext into one of
+    your scripts?
+    You don't have to anymore!
+
+THE STRUCTURE
+    
+    There are three variables that control the behavior of the module:
+        
+        $Env:PSVaultLocation
+            
+            Default:  $Env:LOCALAPPDATA\PSVault
+            This is where your vaults are going to live.
+            You could potentially put all your vaults on a share and have
+            multiple people accessing the same vaults, as long as the
+            VaultPassword to unlock the vault are known to all consumers.
+            In that case, I would recommend to restrict write access to the
+            folder to the necessary minimum in order to avoid nasty locks.
+        
+        $Env:PSVaultKeyLocation
+            
+            Default: $Env:LOCALAPPDATA\PSVault\Keys
+            This is where your VaultPasswords to access the vaults are stored.
+            It makes sense to not change that location, since these are
+            encrypted via the PAPI and therefore useable only on the machine
+            they have been created.
+        
+        $Global:PSVault
+            
+            This variable is set by executing the Connect-PSVault cmdlet.
+            That is mostly for convenience reasons. So you don't have to save
+            the PSVault-Object in a variable yourself in order to access the
+            Credentials.
+
+QUICKSTART - IF YOU ARE WORKING ALONE ON A SINGLE MACHINE
+    
+    $Vault = New-PSVault -Name MyBrandNewVault -SaveKey
+        
+        When asked for a VaultPassword enter one. It will be saved because of
+        the switch used. If you ommit the SaveKey-switch you will have to enter
+        the password everytime you access the vault.
+    
+    $CredentialToSave = Get-Credential -UserName SomeRandomUserName -Message 'Enter your password'
+        
+        Enter a username and password you would like to store.
+    
+    Add-PSVaultCredential -Credential $CredentialToSave
+        
+        It now is saved in your store.
+    
+    $Credential = Get-PSVaultCredential -Username SomeRandomUserName
+        
+        Retrieves the previously saved credential.
+    
+    $Credential|Remove-PSVaultCredential
+    
+        This way you can delete the Credential against
+        Remove-PSVaultCredential -UserName SomeRandomUserName - would have worked the same way
+        By using -force you can - well use the force you know.
+
+    Set-PSVaultCredential -Credential $CredentialToSave
+
+        That command would update the credential if it already exists. In our case it would just
+        create it.
+
+    Remove-PSVault -Name MyBrandNewVault
+
+        This would remove the vault after confirmation or by the use of the -force.
+        Let's not do that just yet.
+
+QUICKSTART - MULTIPLE MACHINES AND/OR MULTIPLE USER
+
+    $Vault = New-PSVault -Name MyBrandNewVault -SaveKey
+        
+        When asked for a VaultPassword enter one. It will be saved because of
+        the switch used. If you ommit the SaveKey-switch you will have to enter
+        the password everytime you access the vault.
+    
+    $CredentialToSave = Get-Credential -UserName SomeRandomUserName -Message 'Enter your password'
+        
+        Enter a username and password you would like to store.
+    
+    Add-PSVaultCredential -Credential $CredentialToSave
+        
+        It now is saved in your store.
+    
+    $Credential = Get-PSVaultCredential -Username SomeRandomUserName
+        
+        Retrieves the previously saved credential.
+    
+    $Credential|Remove-PSVaultCredential
+    
+        This way you can delete the Credential against
+        Remove-PSVaultCredential -UserName SomeRandomUserName - would have worked the same way
+        By using -force you can - well use the force you know.
+
+    Set-PSVaultCredential -Credential $CredentialToSave
+
+        That command would update the credential if it already exists. In our case it would just
+        create it.
+
+    Remove-PSVault -Name MyBrandNewVault
+
+        This would remove the vault after confirmation or by the use of the -force.
+        Let's not do that just yet.
+
+
+
+
+    
+

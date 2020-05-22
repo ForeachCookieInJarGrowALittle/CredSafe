@@ -1,8 +1,9 @@
-## CredSafe
+## PSVault
 
-Module for working with remote credentials
+Module for working with credentials remote or locally without the need to remember who stored the credential on which computer in order to decrypt.
+Kind of like KeePass.
 
-Authored by Daniel Gruber de Alencar
+Authored by SomeRandomUserID Gruber de Alencar
 
 
 Details of how to create a Module in this way can be found here

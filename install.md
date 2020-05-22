@@ -1,5 +1,6 @@
-# Installing CredSafe
+# Installing PSVault
 
-    # You can install CredSafe from the Powershell Gallery using
-    Find-Module CredSafe | Install-Module
-    Import-Module CredSafe
+    # You cannot yet install PSVault from the Powershell Gallery using
+    Find-Module PSVault | Install-Module but it will be possible in the future
+
+    Import-Module PSVault
