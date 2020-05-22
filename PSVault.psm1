@@ -4,7 +4,7 @@ Write-Verbose $PSScriptRoot
 
 Write-Verbose 'Import everything in sub folders folder'
 
-foreach($folder in @('internal', 'functions','classes'))
+foreach($folder in @('classes','internal', 'functions'))
 
 {
 
@@ -29,7 +29,6 @@ foreach($folder in @('internal', 'functions','classes'))
     }
 
 }
-
-
-
+[Environment]::SetEnvironmentVariable('PSVAULTLOCATION',"$env:LOCALAPPDATA\PSVault",'Process')
+[Environment]::SetEnvironmentVariable('PSVAULTKEYLOCATION',"$env:LOCALAPPDATA\PSVault\Keys",'Process')
 Export-ModuleMember -function (Get-ChildItem -Path "$PSScriptRoot\functions\*.ps1").basename
